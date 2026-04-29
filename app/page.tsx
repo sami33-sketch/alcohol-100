@@ -337,8 +337,7 @@ function handleEditPhotoUpload(event: ChangeEvent<HTMLInputElement>) {
     tastedAt: form.tastedAt,
     memo: form.memo,
     photo: form.photo,
-
-    servings: [{ personId: form.personId, cups: Number(form.cups) || 1 }],
+    servings: [{ personId: form.personId, cups: 1 }],
   };
 
   const nextState: AppState = {
@@ -348,20 +347,23 @@ function handleEditPhotoUpload(event: ChangeEvent<HTMLInputElement>) {
 
   await persist(nextState);
 
-setForm({
-  name: "",
-  tastedAt: "",
-  memo: "",
-  personId: state.players[0]?.id ?? "",
-  cups: 1,
-  photo: "",
-});
+  // 先に画像inputを空にする
+  if (fileInputRef.current) {
+    fileInputRef.current.value = "";
+  }
 
-if (fileInputRef.current) {
-  fileInputRef.current.value = "";
-}
+  // フォームを完全リセット
+  setForm({
+    name: "",
+    tastedAt: "",
+    memo: "",
+    personId: state.players[0]?.id ?? "",
+    cups: 1,
+    photo: "",
+  });
 
-setTab("live");
+  // ライブ画面へ移動
+  setTab("live");
 }
 
   function startEditDrink(drink: DrinkLog) {
