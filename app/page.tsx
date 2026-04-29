@@ -348,16 +348,20 @@ function handleEditPhotoUpload(event: ChangeEvent<HTMLInputElement>) {
 
   await persist(nextState);
 
-  setForm({
-    name: "",
-    tastedAt: "",
-    memo: "",
-    personId: state.players[0]?.id ?? "",
-    cups: 1,
-    photo: "",
-  });
+setForm({
+  name: "",
+  tastedAt: "",
+  memo: "",
+  personId: state.players[0]?.id ?? "",
+  cups: 1,
+  photo: "",
+});
 
-  setTab("live");
+if (fileInputRef.current) {
+  fileInputRef.current.value = "";
+}
+
+setTab("live");
 }
 
   function startEditDrink(drink: DrinkLog) {
