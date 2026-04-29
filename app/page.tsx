@@ -268,7 +268,7 @@ function handlePhotoUpload(event: ChangeEvent<HTMLInputElement>) {
     const canvas = document.createElement("canvas");
 
     // 👇 最大サイズ（ここで圧縮）
-    const MAX_WIDTH = 800;
+    const MAX_WIDTH = 400;
     const scale = MAX_WIDTH / img.width;
 
     canvas.width = MAX_WIDTH;
@@ -280,7 +280,7 @@ function handlePhotoUpload(event: ChangeEvent<HTMLInputElement>) {
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
     // 👇 画質も圧縮（0.7くらいがちょうどいい）
-    const compressed = canvas.toDataURL("image/jpeg", 0.7);
+    const compressed = canvas.toDataURL("image/jpeg", 0.45);
 
     setForm((prev) => ({
       ...prev,
@@ -305,7 +305,7 @@ function handleEditPhotoUpload(event: ChangeEvent<HTMLInputElement>) {
   img.onload = () => {
     const canvas = document.createElement("canvas");
 
-    const MAX_WIDTH = 800;
+    const MAX_WIDTH = 400;
     const scale = MAX_WIDTH / img.width;
 
     canvas.width = MAX_WIDTH;
@@ -316,7 +316,7 @@ function handleEditPhotoUpload(event: ChangeEvent<HTMLInputElement>) {
 
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-    const compressed = canvas.toDataURL("image/jpeg", 0.7);
+    const compressed = canvas.toDataURL("image/jpeg", 0.45);
 
     setEditForm((prev) => ({
       ...prev,
@@ -341,10 +341,11 @@ function handleEditPhotoUpload(event: ChangeEvent<HTMLInputElement>) {
   };
 
   const nextState: AppState = {
-    ...state,
-    drinks: [newDrink, ...state.drinks],
-  };
+  ...state,
+  drinks: [newDrink, ...state.drinks],
+};
 
+try {
   await persist(nextState);
 
   // 先に画像inputを空にする
@@ -364,6 +365,10 @@ function handleEditPhotoUpload(event: ChangeEvent<HTMLInputElement>) {
 
   // ライブ画面へ移動
   setTab("live");
+} catch (error) {
+  console.error(error);
+  alert("保存に失敗しました。写真が大きすぎる可能性があります。");
+}
 }
 
   function startEditDrink(drink: DrinkLog) {
