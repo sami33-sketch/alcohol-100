@@ -604,18 +604,6 @@ function handleEditPhotoUpload(event: ChangeEvent<HTMLInputElement>) {
                       <p className="mt-3 text-sm leading-6 text-[#6a4a2d]">{drink.memo}</p>
                     )}
 
-                    <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
-                      {state.players.map((player) => (
-                        <button
-                          key={player.id}
-                          onClick={() => addCup(drink.id, player.id)}
-                          className="rounded-2xl border border-[#c89b53] bg-[#fff8eb] px-3 py-3 text-sm font-semibold text-[#5a241b]"
-                        >
-                          {player.name} +1杯
-                        </button>
-                      ))}
-                    </div>
-
                     <div className="mt-3 grid grid-cols-2 gap-2">
                       <button
                         onClick={() => startEditDrink(drink)}
