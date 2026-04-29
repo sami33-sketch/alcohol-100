@@ -132,24 +132,21 @@ useEffect(() => {
 
   init();
 
-  const unsubscribe = subscribeChallenge((data) => {
-    if (data) {
-      setState(data);
-      setForm((prev) => ({
-        ...prev,
-        personId: data.players[0]?.id ?? prev.personId,
-      }));
+const unsubscribe = subscribeChallenge((data) => {
+  if (data) {
+    setState(data);
+    setForm((prev) => ({
+      ...prev,
+      personId: data.players[0]?.id ?? prev.personId,
+    }));
+  }
 
-      setReady(true); 
-    }
-  });
+  // ← これを外に出す
+  setReady(true);
+});
 
 return () => unsubscribe();
 }, []);
-
-if (!ready) {
-  return <div className="text-center mt-10">読み込み中…</div>;
-}
 
   function getPlayerName(personId: string) {
     return state.players.find((p) => p.id === personId)?.name ?? "不明";
