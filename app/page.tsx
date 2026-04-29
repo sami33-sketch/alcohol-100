@@ -276,36 +276,37 @@ return () => unsubscribe();
   }
 
   async function addDrink() {
-    if (!form.name.trim()) return;
-    if (!state.players.length) return;
+  if (!form.name.trim()) return;
+  if (!state.players.length) return;
 
-    const newDrink: DrinkLog = {
-      id: crypto.randomUUID(),
-      name: form.name.trim(),
-      tastedAt: form.tastedAt,
-      memo: form.memo,
-      photo: form.photo,
-      servings: [{ personId: form.personId, cups: Number(form.cups) || 1 }],
-    };
+  const newDrink: DrinkLog = {
+    id: crypto.randomUUID(),
+    name: form.name.trim(),
+    tastedAt: form.tastedAt,
+    memo: form.memo,
+    photo: "",
 
-    const nextState: AppState = {
-      ...state,
-      drinks: [newDrink, ...state.drinks],
-    };
+    servings: [{ personId: form.personId, cups: Number(form.cups) || 1 }],
+  };
 
-    await persist(nextState);
+  const nextState: AppState = {
+    ...state,
+    drinks: [newDrink, ...state.drinks],
+  };
 
-    setForm({
-      name: "",
-      tastedAt: "",
-      memo: "",
-      personId: state.players[0]?.id ?? "",
-      cups: 1,
-      photo: "",
-    });
+  await persist(nextState);
 
-    setTab("live");
-  }
+  setForm({
+    name: "",
+    tastedAt: "",
+    memo: "",
+    personId: state.players[0]?.id ?? "",
+    cups: 1,
+    photo: "",
+  });
+
+  setTab("live");
+}
 
   function startEditDrink(drink: DrinkLog) {
     setEditingDrinkId(drink.id);
@@ -333,7 +334,7 @@ return () => unsubscribe();
           name: editForm.name.trim(),
           tastedAt: editForm.tastedAt,
           memo: editForm.memo,
-          photo: editForm.photo,
+          photo: "",
           servings: [{ personId: editForm.personId, cups: Number(editForm.cups) || 1 }],
         };
       }),
