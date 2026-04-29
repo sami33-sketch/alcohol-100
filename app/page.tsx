@@ -253,27 +253,79 @@ return () => unsubscribe();
     await persist(nextState);
   }
 
-  function handlePhotoUpload(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
+function handlePhotoUpload(event: ChangeEvent<HTMLInputElement>) {
+  const file = event.target.files?.[0];
+  if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      setForm((prev) => ({ ...prev, photo: String(reader.result || "") }));
-    };
-    reader.readAsDataURL(file);
-  }
+  const img = new Image();
+  const reader = new FileReader();
 
-  function handleEditPhotoUpload(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  reader.onload = (e) => {
+    img.src = e.target?.result as string;
+  };
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      setEditForm((prev) => ({ ...prev, photo: String(reader.result || "") }));
-    };
-    reader.readAsDataURL(file);
-  }
+  img.onload = () => {
+    const canvas = document.createElement("canvas");
+
+    // 👇 最大サイズ（ここで圧縮）
+    const MAX_WIDTH = 800;
+    const scale = MAX_WIDTH / img.width;
+
+    canvas.width = MAX_WIDTH;
+    canvas.height = img.height * scale;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    // 👇 画質も圧縮（0.7くらいがちょうどいい）
+    const compressed = canvas.toDataURL("image/jpeg", 0.7);
+
+    setForm((prev) => ({
+      ...prev,
+      photo: compressed,
+    }));
+  };
+
+  reader.readAsDataURL(file);
+}
+
+function handleEditPhotoUpload(event: ChangeEvent<HTMLInputElement>) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  const img = new Image();
+  const reader = new FileReader();
+
+  reader.onload = (e) => {
+    img.src = e.target?.result as string;
+  };
+
+  img.onload = () => {
+    const canvas = document.createElement("canvas");
+
+    const MAX_WIDTH = 800;
+    const scale = MAX_WIDTH / img.width;
+
+    canvas.width = MAX_WIDTH;
+    canvas.height = img.height * scale;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    const compressed = canvas.toDataURL("image/jpeg", 0.7);
+
+    setEditForm((prev) => ({
+      ...prev,
+      photo: compressed,
+    }));
+  };
+
+  reader.readAsDataURL(file);
+}
 
   async function addDrink() {
   if (!form.name.trim()) return;
