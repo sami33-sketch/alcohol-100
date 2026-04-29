@@ -121,30 +121,35 @@ export default function Page() {
     photo: "",
   });
 
-  useEffect(() => {
-    const init = async () => {
-      const existing = await getChallengeOnce();
-      if (!existing && !didInitRef.current) {
-        didInitRef.current = true;
-        await saveChallenge(initialState);
-      }
-    };
+useEffect(() => {
+  const init = async () => {
+    const existing = await getChallengeOnce();
+    if (!existing && !didInitRef.current) {
+      didInitRef.current = true;
+      await saveChallenge(initialState);
+    }
+  };
 
-    init();
+  init();
 
-    const unsubscribe = subscribeChallenge((data) => {
-      if (data) {
-        setState(data);
-        setForm((prev) => ({
-          ...prev,
-          personId: data.players[0]?.id ?? prev.personId,
-        }));
-      }
-      setReady(true);
-    });
+  const unsubscribe = subscribeChallenge((data) => {
+    if (data) {
+      setState(data);
+      setForm((prev) => ({
+        ...prev,
+        personId: data.players[0]?.id ?? prev.personId,
+      }));
 
-    return () => unsubscribe();
-  }, []);
+      setReady(true); 
+    }
+  });
+
+return () => unsubscribe();
+}, []);
+
+if (!ready) {
+  return <div className="text-center mt-10">読み込み中…</div>;
+}
 
   function getPlayerName(personId: string) {
     return state.players.find((p) => p.id === personId)?.name ?? "不明";
