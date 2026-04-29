@@ -336,7 +336,7 @@ function handleEditPhotoUpload(event: ChangeEvent<HTMLInputElement>) {
     name: form.name.trim(),
     tastedAt: form.tastedAt,
     memo: form.memo,
-    photo: "",
+    photo: form.photo,
 
     servings: [{ personId: form.personId, cups: Number(form.cups) || 1 }],
   };
@@ -386,7 +386,7 @@ function handleEditPhotoUpload(event: ChangeEvent<HTMLInputElement>) {
           name: editForm.name.trim(),
           tastedAt: editForm.tastedAt,
           memo: editForm.memo,
-          photo: "",
+          photo: editForm.photo,
           servings: [{ personId: editForm.personId, cups: Number(editForm.cups) || 1 }],
         };
       }),
